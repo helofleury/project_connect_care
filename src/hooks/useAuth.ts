@@ -1,13 +1,9 @@
 import { useCallback, useState } from "react";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import type { AuthUser } from "../types/auth";
 
 interface UseAuthReturn {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
@@ -19,7 +15,7 @@ interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
 
   const signIn = useCallback(
@@ -28,6 +24,7 @@ export function useAuth(): UseAuthReturn {
 
       try {
         // Authentication service will be connected here.
+
         setUser({
           id: "1",
           name: "João",
@@ -50,6 +47,7 @@ export function useAuth(): UseAuthReturn {
 
       try {
         // Registration service will be connected here.
+
         setUser({
           id: "1",
           name,
@@ -67,6 +65,7 @@ export function useAuth(): UseAuthReturn {
 
     try {
       // Authentication service will be connected here.
+
       setUser(null);
     } finally {
       setLoading(false);

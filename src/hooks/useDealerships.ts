@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface Dealership {
-  id: string;
-  name: string;
-  address: string;
-  distance: string;
-  phone: string;
-  openingHours: string;
-  available: boolean;
-}
+import type { Dealership } from "../types/dealership";
 
 interface UseDealershipsReturn {
   dealerships: Dealership[];

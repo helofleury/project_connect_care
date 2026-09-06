@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface Prediction {
-  id: string;
-  title: string;
-  description: string;
-  value?: string;
-  icon?: string;
-}
+import type { Prediction } from "../types/prediction";
 
 interface UsePredictionsReturn {
   predictions: Prediction[];

@@ -1,17 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  customerSince: string;
-  mainDealership: string;
-  warranty: string;
-  currentMileage: number;
-  nextServiceMileage: number;
-  relationshipScore: number;
-  loyaltyScore: number;
-}
+import type { Customer } from "../types/customer";
 
 interface UseCustomerReturn {
   customer: Customer | null;

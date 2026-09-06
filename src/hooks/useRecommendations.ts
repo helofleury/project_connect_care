@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface Recommendation {
-  id: string;
-  title: string;
-  description: string;
-  actionLabel: string;
-  icon?: string;
-  highlighted?: boolean;
-}
+import type { Recommendation } from "../types/recommendation";
 
 interface UseRecommendationsReturn {
   recommendations: Recommendation[];

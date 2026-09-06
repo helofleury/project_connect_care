@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface Vehicle {
-  id: string;
-  model: string;
-  year: number;
-  fuel: string;
-  mileage: number;
-  nextServiceMileage: number;
-  warranty: string;
-}
+import type { Vehicle } from "../types/vehicle";
 
 interface UseVehicleReturn {
   vehicle: Vehicle | null;

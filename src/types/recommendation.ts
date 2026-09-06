@@ -7,7 +7,8 @@ export interface Recommendation {
   id: string;
   title: string;
   description: string;
-  reason: string;
-  priority: RecommendationPriority;
-  dealershipId?: string;
+  actionLabel?: string;
+  icon?: string;
+  highlighted?: boolean;
+  
 }
