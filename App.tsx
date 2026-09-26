@@ -52,18 +52,8 @@ export default function App() {
 
   const loadFonts = useCallback(async () => {
     try {
-      // Carrega a fonte de ícones (Ionicons) UMA única vez, no início do
-      // app. Sem isso, cada ícone que aparece na tela tenta baixar a
-      // fonte por conta própria — se o celular não alcançar o servidor
-      // do Metro (fora da mesma rede, firewall na porta 8081, etc.),
-      // isso gera um erro "ExpoAsset.downloadAsync ... rejected" PARA
-      // CADA ícone simultâneo na tela.
       await Font.loadAsync(Ionicons.font);
     } catch (error) {
-      // Não travamos o app por causa disso: os ícones podem não
-      // aparecer, mas o resto do app continua funcionando. O aviso
-      // ajuda a identificar rapidamente um problema de rede entre o
-      // celular e o computador rodando o Expo.
       console.warn(
         "[App] Não foi possível carregar a fonte de ícones (Ionicons). " +
           "Isso geralmente indica que o celular não está alcançando o " +
