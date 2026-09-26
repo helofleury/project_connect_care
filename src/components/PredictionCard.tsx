@@ -8,10 +8,11 @@ import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 
 interface PredictionCardProps {
+  icon: string;
   title: string;
   description: string;
-  value?: string;
-  icon?: string;
+  value: string;
+  highlighted?: boolean;
 }
 
 const PredictionCard: FC<PredictionCardProps> = ({
@@ -19,23 +20,39 @@ const PredictionCard: FC<PredictionCardProps> = ({
   description,
   value,
   icon = "🔧",
+  highlighted = false,
 }) => {
   return (
     <Card>
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
+      <View
+        style={[
+          styles.container,
+          highlighted && styles.highlightedContainer,
+        ]}
+      >
+        <View
+          style={[
+            styles.iconContainer,
+            highlighted && styles.highlightedIconContainer,
+          ]}
+        >
           <Text style={styles.icon}>{icon}</Text>
         </View>
 
         <View style={styles.content}>
           <Text style={styles.title}>{title}</Text>
 
-          <Text style={styles.description}>
-            {description}
-          </Text>
+          <Text style={styles.description}>{description}</Text>
 
           {value && (
-            <Text style={styles.value}>{value}</Text>
+            <Text
+              style={[
+                styles.value,
+                highlighted && styles.highlightedValue,
+              ]}
+            >
+              {value}
+            </Text>
           )}
         </View>
       </View>
@@ -48,6 +65,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
+  highlightedContainer: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 12,
+    padding: spacing.sm,
+  },
+
   iconContainer: {
     width: 44,
     height: 44,
@@ -55,6 +79,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  highlightedIconContainer: {
+    backgroundColor: colors.primary,
   },
 
   icon: {
@@ -81,6 +109,10 @@ const styles = StyleSheet.create({
     ...typography.bodyMedium,
     color: colors.primary,
     marginTop: spacing.sm,
+  },
+
+  highlightedValue: {
+    fontWeight: "700",
   },
 });
 

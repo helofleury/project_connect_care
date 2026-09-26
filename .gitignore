@@ -40,3 +40,15 @@ yarn-error.*
 /ios
 /android
 src/.env
+
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Dados grandes locais
+backend/data/*.xlsx

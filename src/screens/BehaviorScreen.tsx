@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,8 +10,61 @@ import Card from "../components/Card";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
+import { useBehavior } from "../hooks/useBehavior";
+
+const DEMO_VIN =
+  "7c1878b6f55e26922eb1955d2c1ea5689999868cb58cfb373b6742ce34a45b28";
 
 export default function BehaviorScreen() {
+  const {
+    segment,
+    loading,
+    error,
+  } = useBehavior(DEMO_VIN);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator
+          size="large"
+          color={colors.primary}
+        />
+
+        <Text style={styles.loadingText}>
+          Analisando seu perfil...
+        </Text>
+      </View>
+    );
+  }
+
+  if (error || !segment) {
+    return (
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
+        <Text style={styles.title}>Meu Perfil</Text>
+
+        <Text style={styles.subtitle}>
+          Entenda como nos relacionamos com você.
+        </Text>
+
+        <Card style={styles.errorCard}>
+          <Text style={styles.errorTitle}>
+            Não foi possível carregar seu perfil
+          </Text>
+
+          <Text style={styles.errorText}>
+            {error ||
+              "Não encontramos informações comportamentais para este veículo."}
+          </Text>
+        </Card>
+      </ScrollView>
+    );
+  }
+
+  const vehicle = segment.vehicle;
+
   return (
     <ScrollView
       style={styles.container}
@@ -27,12 +81,13 @@ export default function BehaviorScreen() {
         <Text style={styles.icon}>👥</Text>
 
         <Text style={styles.profileTitle}>
-          Você valoriza custo-benefício
+          {segment.segment_name}
         </Text>
 
         <Text style={styles.profileDescription}>
-          Você prioriza soluções eficientes e serviços
-          essenciais para o seu veículo.
+          Esse perfil foi identificado automaticamente a
+          partir do histórico de utilização e manutenção
+          do seu veículo.
         </Text>
       </Card>
 
@@ -42,52 +97,106 @@ export default function BehaviorScreen() {
 
       <ProfileItem
         label="Frequência de serviços"
-        value="Moderada"
+        value={formatServiceFrequency(
+          vehicle.service_count
+        )}
       />
 
       <ProfileItem
-        label="Preferência de canal"
-        value="WhatsApp"
+        label="Total de serviços"
+        value={formatNumber(vehicle.service_count)}
       />
 
       <ProfileItem
-        label="Sensibilidade a preço"
-        value="Alta"
+        label="Tempo desde o último serviço"
+        value={formatDays(
+          vehicle.days_since_last_service
+        )}
       />
 
       <ProfileItem
-        label="Uso do veículo"
-        value="Urbano"
+        label="Intervalo médio entre serviços"
+        value={formatAverageInterval(
+          vehicle.avg_days_between_services
+        )}
       />
 
       <ProfileItem
-        label="Engajamento com ofertas"
-        value="Médio"
+        label="Fidelidade à concessionária"
+        value={formatPercentage(
+          vehicle.dealer_loyalty_ratio
+        )}
+      />
+
+      <ProfileItem
+        label="Serviços agendados"
+        value={formatPercentage(
+          vehicle.schedule_rate
+        )}
       />
 
       <Text style={styles.sectionTitle}>
-        Seus padrões
+        Análise do modelo
       </Text>
 
       <Card>
         <Text style={styles.comparisonTitle}>
-          Comparativo com outros clientes
+          Segmentação comportamental
         </Text>
 
         <Text style={styles.comparisonText}>
-          Você está entre os 65% dos clientes com
-          perfil semelhante.
+          O veículo foi classificado pelo modelo de
+          Machine Learning em um dos grupos de
+          comportamento identificados no histórico Ford.
         </Text>
 
-        <View style={styles.progressBackground}>
-          <View style={styles.progress} />
+        <View style={styles.segmentBox}>
+          <Text style={styles.segmentLabel}>
+            Segmento identificado
+          </Text>
+
+          <Text style={styles.segmentValue}>
+            {segment.segment_name}
+          </Text>
         </View>
 
-        <View style={styles.progressLabels}>
-          <Text style={styles.label}>0%</Text>
-          <Text style={styles.label}>65%</Text>
-          <Text style={styles.label}>100%</Text>
+        <View style={styles.modelInfo}>
+          <Text style={styles.modelInfoLabel}>
+            Modelo utilizado
+          </Text>
+
+          <Text style={styles.modelInfoValue}>
+            K-Means
+          </Text>
         </View>
+      </Card>
+
+      <Text style={styles.sectionTitle}>
+        Dados do veículo
+      </Text>
+
+      <Card>
+        <ProfileItem
+          label="Modelo"
+          value={vehicle.model || "Não informado"}
+          noCard
+        />
+
+        <ProfileItem
+          label="Ano"
+          value={
+            vehicle.year
+              ? String(vehicle.year)
+              : "Não informado"
+          }
+          noCard
+        />
+
+        <ProfileItem
+          label="Quilometragem registrada"
+          value={formatKilometers(vehicle.last_km)}
+          noCard
+        />
       </Card>
     </ScrollView>
   );
@@ -96,17 +205,105 @@ export default function BehaviorScreen() {
 interface ProfileItemProps {
   label: string;
   value: string;
+  noCard?: boolean;
 }
 
-function ProfileItem({ label, value }: ProfileItemProps) {
+function ProfileItem({
+  label,
+  value,
+  noCard = false,
+}: ProfileItemProps) {
+  const content = (
+    <View style={styles.itemContent}>
+      <Text style={styles.itemLabel}>{label}</Text>
+
+      <Text style={styles.itemValue}>{value}</Text>
+    </View>
+  );
+
+  if (noCard) {
+    return (
+      <View style={styles.itemWithoutCard}>
+        {content}
+      </View>
+    );
+  }
+
   return (
     <Card style={styles.item}>
-      <View style={styles.itemContent}>
-        <Text style={styles.itemLabel}>{label}</Text>
-        <Text style={styles.itemValue}>{value}</Text>
-      </View>
+      {content}
     </Card>
   );
+}
+
+function formatNumber(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  return value.toLocaleString("pt-BR");
+}
+
+function formatPercentage(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  return `${Math.round(value * 100)}%`;
+}
+
+function formatDays(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  return `${value} dias`;
+}
+
+function formatAverageInterval(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  return `${Math.round(value)} dias`;
+}
+
+function formatKilometers(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  return `${Math.round(value).toLocaleString(
+    "pt-BR"
+  )} km`;
+}
+
+function formatServiceFrequency(
+  value: number | null
+): string {
+  if (value === null || value === undefined) {
+    return "Não informado";
+  }
+
+  if (value >= 7) {
+    return "Alta";
+  }
+
+  if (value >= 4) {
+    return "Moderada";
+  }
+
+  return "Baixa";
 }
 
 const styles = StyleSheet.create({
@@ -118,6 +315,19 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.md,
     paddingBottom: spacing.xxxl,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.background,
+  },
+
+  loadingText: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.sm,
   },
 
   title: {
@@ -150,6 +360,7 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    lineHeight: 20,
   },
 
   sectionTitle: {
@@ -166,16 +377,25 @@ const styles = StyleSheet.create({
   itemContent: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  itemWithoutCard: {
+    paddingVertical: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
   },
 
   itemLabel: {
     ...typography.bodySmall,
     color: colors.textSecondary,
+    flex: 1,
   },
 
   itemValue: {
     ...typography.bodyMedium,
     color: colors.text,
+    textAlign: "right",
   },
 
   comparisonTitle: {
@@ -187,30 +407,55 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    lineHeight: 20,
   },
 
-  progressBackground: {
-    height: 8,
-    backgroundColor: colors.divider,
-    borderRadius: 4,
-    overflow: "hidden",
+  segmentBox: {
     marginTop: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.primaryLight,
+    borderRadius: 12,
   },
 
-  progress: {
-    width: "65%",
-    height: "100%",
-    backgroundColor: colors.primary,
+  segmentLabel: {
+    ...typography.caption,
+    color: colors.textSecondary,
   },
 
-  progressLabels: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  segmentValue: {
+    ...typography.title,
+    color: colors.primaryDark,
     marginTop: spacing.xs,
   },
 
-  label: {
-    ...typography.caption,
-    color: colors.textLight,
+  modelInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: spacing.md,
+  },
+
+  modelInfoLabel: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+  },
+
+  modelInfoValue: {
+    ...typography.bodyMedium,
+    color: colors.text,
+  },
+
+  errorCard: {
+    marginTop: spacing.lg,
+  },
+
+  errorTitle: {
+    ...typography.title,
+    color: colors.text,
+  },
+
+  errorText: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
 });

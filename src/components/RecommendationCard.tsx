@@ -1,8 +1,19 @@
 import type { FC } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { colors } from "../theme/colors";
-import { borderRadius, spacing } from "../theme/spacing";
+import {
+  borderRadius,
+  spacing,
+} from "../theme/spacing";
 import { typography } from "../theme/typography";
 
 interface RecommendationCardProps {
@@ -14,11 +25,13 @@ interface RecommendationCardProps {
   highlighted?: boolean;
 }
 
-const RecommendationCard: FC<RecommendationCardProps> = ({
+const RecommendationCard: FC<
+  RecommendationCardProps
+> = ({
   title,
   description,
   actionLabel = "Ver detalhes",
-  icon = "🎯",
+  icon = "bulb-outline",
   onPress,
   highlighted = false,
 }) => {
@@ -29,18 +42,40 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
         highlighted && styles.highlighted,
       ]}
     >
+      {/* Cabeçalho */}
       <View style={styles.header}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.icon}>{icon}</Text>
+        <View
+          style={[
+            styles.iconContainer,
+            highlighted &&
+              styles.highlightedIconContainer,
+          ]}
+        >
+          <Ionicons
+            name={icon as any}
+            size={20}
+            color={
+              highlighted
+                ? colors.primaryDark
+                : colors.primary
+            }
+          />
         </View>
 
-        <Text style={styles.label}>
+        <Text
+          style={[
+            styles.label,
+            highlighted &&
+              styles.highlightedLabel,
+          ]}
+        >
           {highlighted
             ? "SUA PRÓXIMA MELHOR AÇÃO"
             : "RECOMENDAÇÃO"}
         </Text>
       </View>
 
+      {/* Título */}
       <Text
         style={[
           styles.title,
@@ -50,25 +85,47 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
         {title}
       </Text>
 
+      {/* Descrição */}
       <Text
         style={[
           styles.description,
-          highlighted && styles.highlightedDescription,
+          highlighted &&
+            styles.highlightedDescription,
         ]}
       >
         {description}
       </Text>
 
+      {/* Ação */}
       {onPress && (
         <Pressable
           onPress={onPress}
-          style={styles.action}
+          style={({ pressed }) => [
+            styles.action,
+            pressed && styles.pressedAction,
+            highlighted &&
+              styles.highlightedAction,
+          ]}
         >
-          <Text style={styles.actionText}>
+          <Text
+            style={[
+              styles.actionText,
+              highlighted &&
+                styles.highlightedActionText,
+            ]}
+          >
             {actionLabel}
           </Text>
 
-          <Text style={styles.arrow}>→</Text>
+          <Ionicons
+            name="arrow-forward"
+            size={18}
+            color={
+              highlighted
+                ? colors.textWhite
+                : colors.primary
+            }
+          />
         </Pressable>
       )}
     </View>
@@ -95,29 +152,35 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: colors.primaryLight,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  icon: {
-    fontSize: 18,
+  highlightedIconContainer: {
+    backgroundColor: colors.surface,
   },
 
   label: {
     ...typography.caption,
     color: colors.textSecondary,
     marginLeft: spacing.sm,
-    fontWeight: "600",
+    fontWeight: "700",
+    flex: 1,
+  },
+
+  highlightedLabel: {
+    color: colors.textWhite,
   },
 
   title: {
     ...typography.title,
     color: colors.text,
     marginTop: spacing.md,
+    fontWeight: "700",
   },
 
   highlightedText: {
@@ -128,6 +191,7 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    lineHeight: 20,
   },
 
   highlightedDescription: {
@@ -140,6 +204,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: spacing.md,
     paddingVertical: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
+  },
+
+  highlightedAction: {
+    borderTopColor: "rgba(255,255,255,0.2)",
   },
 
   actionText: {
@@ -147,9 +217,12 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-  arrow: {
-    fontSize: 20,
-    color: colors.primary,
+  highlightedActionText: {
+    color: colors.textWhite,
+  },
+
+  pressedAction: {
+    opacity: 0.6,
   },
 });
 

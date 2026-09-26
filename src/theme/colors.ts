@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   // Brand
   primary: "#0057B8",
   primaryDark: "#071A3D",
@@ -39,4 +39,53 @@ export const colors = {
 
   // Transparent / overlay
   overlay: "rgba(0, 0, 0, 0.4)",
-} as const;
+};
+
+export const darkColors: typeof lightColors = {
+  // Brand
+  primary: "#3D8BFF",
+  primaryDark: "#0A1A33",
+  primaryLight: "#152A4A",
+
+  // Backgrounds
+  background: "#0B1120",
+  surface: "#151B2C",
+  surfaceSecondary: "#1B2338",
+
+  // Text
+  text: "#F2F4F8",
+  textSecondary: "#9AA5B8",
+  textLight: "#6C7689",
+  textWhite: "#FFFFFF",
+
+  // Status
+  success: "#4ADE80",
+  successLight: "#173824",
+
+  warning: "#FBBF24",
+  warningLight: "#3A2E0F",
+
+  danger: "#F87171",
+  dangerLight: "#3B1616",
+
+  info: "#60A5FA",
+  infoLight: "#132238",
+
+  // UI
+  border: "#26304A",
+  divider: "#20283F",
+
+  // Scores
+  scoreGood: "#4ADE80",
+  scoreMedium: "#FBBF24",
+  scoreLow: "#F87171",
+
+  // Transparent / overlay
+  overlay: "rgba(0, 0, 0, 0.6)",
+};
+
+export type ThemeColors = typeof lightColors;
+
+// Mantido para compatibilidade com telas que ainda importam `colors`
+// diretamente (tema claro fixo). Novas telas devem usar `useTheme()`.
+export const colors = lightColors;

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+
 import type { Recommendation } from "../types/recommendation";
+import { recommendationService } from "../services/recommendationService";
 
 interface UseRecommendationsReturn {
   recommendations: Recommendation[];
@@ -8,68 +10,34 @@ interface UseRecommendationsReturn {
   refreshRecommendations: () => Promise<void>;
 }
 
-const mockRecommendations: Recommendation[] = [
-  {
-    id: "1",
-    title: "Agendar Revisão",
-    description:
-      "Detectamos que seu veículo está próximo da manutenção.",
-    actionLabel: "Agendar agora",
-    icon: "🔧",
-    highlighted: true,
-  },
-  {
-    id: "2",
-    title: "Troca de pneus",
-    description:
-      "Seus pneus estão próximos do limite de uso.",
-    actionLabel: "Ver detalhes",
-    icon: "🚗",
-  },
-  {
-    id: "3",
-    title: "Acessórios para Ranger",
-    description:
-      "Confira acessórios recomendados para o seu veículo.",
-    actionLabel: "Ver detalhes",
-    icon: "🧰",
-  },
-  {
-    id: "4",
-    title: "Fale com a concessionária",
-    description:
-      "Tire dúvidas ou agende outros serviços.",
-    actionLabel: "Ver detalhes",
-    icon: "💬",
-  },
-];
-
 export function useRecommendations(): UseRecommendationsReturn {
   const [recommendations, setRecommendations] =
     useState<Recommendation[]>([]);
 
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState<string | null>(null);
 
-  const refreshRecommendations = useCallback(
-    async () => {
-      setLoading(true);
-      setError(null);
+  const refreshRecommendations = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        // Recommendation service will be connected here.
-        setRecommendations(mockRecommendations);
-      } catch {
-        setError(
-          "Não foi possível carregar as recomendações."
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+    try {
+      const data =
+        await recommendationService.getRecommendations();
+
+      setRecommendations(data);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Não foi possível carregar as recomendações.";
+
+      setRecommendations([]);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     refreshRecommendations();

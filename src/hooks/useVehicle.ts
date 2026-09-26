@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
 import type { Vehicle } from "../types/vehicle";
+import { vehicleService } from "../services/vehicleService";
 
 interface UseVehicleReturn {
   vehicle: Vehicle | null;
@@ -8,39 +14,55 @@ interface UseVehicleReturn {
   refreshVehicle: () => Promise<void>;
 }
 
-const mockVehicle: Vehicle = {
-  id: "vehicle-1",
-  model: "Ranger XLT 2.2 4x4",
-  year: 2022,
-  fuel: "Diesel",
-  mileage: 13000,
-  nextServiceMileage: 5200,
-  warranty: "Válida até 16/03/2027",
-};
+const DEMO_VIN =
+  "7c1878b6f55e26922eb1955d2c1ea5689999868cb58cfb373b6742ce34a45b28";
 
-export function useVehicle(): UseVehicleReturn {
+export function useVehicle(
+  customerId?: string
+): UseVehicleReturn {
   const [vehicle, setVehicle] =
     useState<Vehicle | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] =
+    useState<string | null>(null);
 
-  const refreshVehicle = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const refreshVehicle =
+    useCallback(async () => {
+      if (!customerId) {
+        setVehicle(null);
+        setError(
+          "Não foi possível identificar o cliente."
+        );
+        setLoading(false);
 
-    try {
-      // Vehicle service will be connected here.
-      setVehicle(mockVehicle);
-    } catch {
-      setError(
-        "Não foi possível carregar os dados do veículo."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data =
+          await vehicleService.getVehicleByVin(
+            DEMO_VIN
+          );
+
+        setVehicle(data);
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : "Não foi possível carregar os dados do veículo.";
+
+        setVehicle(null);
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
+    }, [customerId]);
 
   useEffect(() => {
     refreshVehicle();

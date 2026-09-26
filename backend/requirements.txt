@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+psycopg[binary]
+anthropic
+httpx
+scikit-learn
+joblib
+pandas
+python-dateutil
+pydantic

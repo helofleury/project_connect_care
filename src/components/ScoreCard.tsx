@@ -12,6 +12,7 @@ interface ScoreCardProps {
   score: number;
   maxScore: number;
   description?: string;
+  variant?: "good" | "medium" | "bad";
 }
 
 const ScoreCard: FC<ScoreCardProps> = ({

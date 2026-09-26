@@ -11,7 +11,18 @@ interface InputProps {
   value: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
-  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+
+  keyboardType?:
+    | "default"
+    | "email-address"
+    | "numeric"
+    | "phone-pad"
+    | "number-pad";
+
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
+  autoCorrect?: boolean;
+  maxLength?: number;
+
   error?: string;
 }
 
@@ -22,6 +33,9 @@ const Input: FC<InputProps> = ({
   onChangeText,
   secureTextEntry = false,
   keyboardType = "default",
+  autoCapitalize = "sentences",
+  autoCorrect = true,
+  maxLength,
   error,
 }) => {
   return (
@@ -35,10 +49,10 @@ const Input: FC<InputProps> = ({
         placeholderTextColor={colors.textLight}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
-        style={[
-          styles.input,
-          error && styles.inputError,
-        ]}
+        autoCapitalize={autoCapitalize}
+        autoCorrect={autoCorrect}
+        maxLength={maxLength}
+        style={[styles.input, error && styles.inputError]}
       />
 
       {error && <Text style={styles.error}>{error}</Text>}

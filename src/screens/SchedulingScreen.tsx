@@ -1,12 +1,15 @@
 import { useState } from "react";
 import {
+  Alert,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import type { RouteProp } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import Button from "../components/Button";
 import Card from "../components/Card";
@@ -15,10 +18,10 @@ import { borderRadius, spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 import type { AppStackParamList } from "../navigation/types";
 
-type RouteProps = RouteProp<
-  AppStackParamList,
-  "Scheduling"
->;
+type RouteProps = RouteProp<AppStackParamList, "Scheduling">;
+
+type NavigationProp =
+  NativeStackNavigationProp<AppStackParamList>;
 
 const dates = [
   "12/09",
@@ -38,6 +41,7 @@ const times = [
 
 export default function SchedulingScreen() {
   const route = useRoute<RouteProps>();
+  const navigation = useNavigation<NavigationProp>();
 
   const [selectedDate, setSelectedDate] =
     useState<string | null>(null);
@@ -45,14 +49,45 @@ export default function SchedulingScreen() {
   const [selectedTime, setSelectedTime] =
     useState<string | null>(null);
 
+  const [isScheduling, setIsScheduling] =
+    useState(false);
+
   const handleSchedule = () => {
-    // Scheduling service will be connected later.
+    if (!selectedDate || !selectedTime) {
+      Alert.alert(
+        "Selecione uma data e horário",
+        "Escolha uma data e um horário para continuar."
+      );
+
+      return;
+    }
+
+    setIsScheduling(true);
+
+    // Simula o processamento do agendamento.
+    // Posteriormente vamos substituir esta parte
+    // pela chamada ao schedulingService/backend.
+    setTimeout(() => {
+      setIsScheduling(false);
+
+      Alert.alert(
+        "Agendamento confirmado! 🎉",
+        `Sua revisão foi agendada para ${selectedDate} às ${selectedTime}.`,
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    }, 600);
   };
 
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
     >
       <Text style={styles.title}>
         Agendar serviço
@@ -73,7 +108,8 @@ export default function SchedulingScreen() {
         </Text>
 
         <Text style={styles.summaryText}>
-          Concessionária selecionada: {route.params.dealershipId}
+          Concessionária selecionada:{" "}
+          {route.params.dealershipId}
         </Text>
       </Card>
 
@@ -86,15 +122,16 @@ export default function SchedulingScreen() {
           const selected = selectedDate === date;
 
           return (
-            <View
+            <Pressable
               key={date}
-              style={[
+              onPress={() => setSelectedDate(date)}
+              style={({ pressed }) => [
                 styles.option,
                 selected && styles.selectedOption,
+                pressed && styles.pressedOption,
               ]}
             >
               <Text
-                onPress={() => setSelectedDate(date)}
                 style={[
                   styles.optionText,
                   selected && styles.selectedOptionText,
@@ -102,7 +139,7 @@ export default function SchedulingScreen() {
               >
                 {date}
               </Text>
-            </View>
+            </Pressable>
           );
         })}
       </View>
@@ -116,15 +153,16 @@ export default function SchedulingScreen() {
           const selected = selectedTime === time;
 
           return (
-            <View
+            <Pressable
               key={time}
-              style={[
+              onPress={() => setSelectedTime(time)}
+              style={({ pressed }) => [
                 styles.timeOption,
                 selected && styles.selectedOption,
+                pressed && styles.pressedOption,
               ]}
             >
               <Text
-                onPress={() => setSelectedTime(time)}
                 style={[
                   styles.optionText,
                   selected && styles.selectedOptionText,
@@ -132,16 +170,26 @@ export default function SchedulingScreen() {
               >
                 {time}
               </Text>
-            </View>
+            </Pressable>
           );
         })}
       </View>
 
-      <Button
-        title="Confirmar agendamento"
-        onPress={handleSchedule}
-        disabled={!selectedDate || !selectedTime}
-      />
+      <View style={styles.confirmButton}>
+        <Button
+          title={
+            isScheduling
+              ? "Confirmando..."
+              : "Confirmar agendamento"
+          }
+          onPress={handleSchedule}
+          disabled={
+            !selectedDate ||
+            !selectedTime ||
+            isScheduling
+          }
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -223,6 +271,10 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
 
+  pressedOption: {
+    opacity: 0.7,
+  },
+
   optionText: {
     ...typography.bodySmall,
     color: colors.text,
@@ -231,5 +283,9 @@ const styles = StyleSheet.create({
   selectedOptionText: {
     color: colors.textWhite,
     fontWeight: "600",
+  },
+
+  confirmButton: {
+    marginTop: spacing.xl,
   },
 });

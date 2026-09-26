@@ -1,0 +1,53 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package-lock.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/navigation/AppNavigator.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/navigation/types.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/screens/Customer360Screen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/screens/EngagementScreen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/screens/PredictionScreen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/screens/RecommendationScreen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/screens/RegisterScreen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/services/authService.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/services/customerService.ts', LF will be replaced by CRLF the next time Git touches it
+ .gitignore                                |    1 [32m+[m
+ App.tsx                                   |   85 [32m+[m[31m-[m
+ app.json                                  |    7 [32m+[m[31m-[m
+ package-lock.json                         | 5423 [32m++++++++[m[31m---------------------[m
+ package.json                              |   22 [32m+[m[31m-[m
+ src/components/Button.tsx                 |   63 [32m+[m[31m-[m
+ src/components/Card.tsx                   |   21 [32m+[m[31m-[m
+ src/components/Input.tsx                  |   24 [32m+[m[31m-[m
+ src/components/PredictionCard.tsx         |   48 [32m+[m[31m-[m
+ src/components/RecommendationCard.tsx     |  113 [32m+[m[31m-[m
+ src/components/ScoreCard.tsx              |    1 [32m+[m
+ src/components/VehicleCard.tsx            |  201 [32m+[m[31m-[m
+ src/hooks/useAuth.ts                      |   83 [32m+[m[31m-[m
+ src/hooks/useCustomer.ts                  |   76 [32m+[m[31m-[m
+ src/hooks/useDealerships.ts               |   93 [32m+[m[31m-[m
+ src/hooks/useRecommendations.ts           |   78 [32m+[m[31m-[m
+ src/hooks/useVehicle.ts                   |   84 [32m+[m[31m-[m
+ src/navigation/AppNavigator.tsx           |  105 [32m+[m[31m-[m
+ src/navigation/types.ts                   |   25 [32m+[m[31m-[m
+ src/screens/BehaviorScreen.tsx            |  327 [32m+[m[31m-[m
+ src/screens/Customer360Screen.tsx         | 1187 [32m++++++[m[31m-[m
+ src/screens/DealershipDetailsScreen.tsx   |  569 [32m++[m[31m-[m
+ src/screens/DealershipSelectionScreen.tsx |  426 [32m++[m[31m-[m
+ src/screens/EngagementScreen.tsx          |  426 [32m++[m[31m-[m
+ src/screens/LoginScreen.tsx               |  320 [32m+[m[31m-[m
+ src/screens/PredictionScreen.tsx          | 1349 [32m++++++[m[31m-[m
+ src/screens/RecommendationScreen.tsx      | 1047 [32m+++++[m[31m-[m
+ src/screens/RegisterScreen.tsx            |  631 [32m+++[m[31m-[m
+ src/screens/SchedulingScreen.tsx          |   96 [32m+[m[31m-[m
+ src/services/authService.ts               |  221 [32m+[m[31m-[m
+ src/services/customerService.ts           |  116 [32m+[m[31m-[m
+ src/services/dealershipService.ts         |   58 [32m+[m[31m-[m
+ src/services/firebase.ts                  |   21 [32m+[m[31m-[m
+ src/services/predictionService.ts         |  264 [32m+[m[31m-[m
+ src/services/recommendationService.ts     |  251 [32m+[m[31m-[m
+ src/services/vehicleService.ts            |  145 [32m+[m[31m-[m
+ src/theme/colors.ts                       |   53 [32m+[m[31m-[m
+ src/types/dealership.ts                   |    3 [32m+[m
+ 38 files changed, 8626 insertions(+), 5437 deletions(-)
