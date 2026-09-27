@@ -1,6 +1,6 @@
 from importlib import import_module
 
-DATABASE_URL="postgresql://postgres:SUA_SENHA@localhost:5433/connectcare360"
+DATABASE_URL="postgresql://postgres:[SUA_SENHA]@localhost:5433/connectcare360"
 
 
 def get_connection():

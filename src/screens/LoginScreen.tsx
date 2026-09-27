@@ -43,10 +43,11 @@ type NavigationProp =
     AuthStackParamList
   >;
 
-function getLoginErrorMessage(
-  error: unknown
-): string {
+function getLoginErrorMessage(error: unknown): string {
   if (error instanceof FirebaseError) {
+    console.log("FIREBASE ERROR CODE:", error.code);
+    console.log("FIREBASE ERROR MESSAGE:", error.message);
+
     switch (error.code) {
       case "auth/invalid-credential":
       case "auth/wrong-password":
@@ -60,11 +61,16 @@ function getLoginErrorMessage(
         return "Muitas tentativas. Aguarde um momento e tente de novo.";
 
       default:
-        return "Não foi possível entrar. Tente novamente.";
+        return `Erro Firebase: ${error.code}`;
     }
   }
 
-  return "Não foi possível entrar. Tente novamente.";
+  if (error instanceof Error) {
+    console.log("LOGIN ERROR:", error.message);
+    return `Erro: ${error.message}`;
+  }
+
+  return `Erro desconhecido: ${String(error)}`;
 }
 
 export default function LoginScreen() {
