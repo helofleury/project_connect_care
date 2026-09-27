@@ -134,6 +134,13 @@ connectcare-360/
     ├── models/
     └── sql/
 ```
+> 📁 Os arquivos de dados utilizados no processamento do projeto não são versionados no repositório devido ao seu tamanho.
+>
+> ```text
+> backend/data/
+> ├── ford_service_history_tratado.csv
+> └── ford_vehicle_360.csv
+> ```
 
 # 🚀 Como executar
 ## Backend
@@ -192,7 +199,18 @@ npm install
 npx expo start
 ```
 > ⚠️ Configure as credenciais do Firebase e a URL da API antes de iniciar o aplicativo.
- 
+
+## 📦 APK Android
+
+A versão final do aplicativo foi gerada utilizando **Expo EAS Build**.
+
+Para gerar uma nova versão do APK:
+
+```bash
+eas build --platform android --profile preview
+```
+> Para testes em dispositivo físico, o backend deve estar acessível pelo endereço IP da máquina na mesma rede do dispositivo.
+
 # 🎥 Demonstração
  
 Veja a solução funcionando:
