@@ -1,6 +1,13 @@
+import os
 from importlib import import_module
+from dotenv import load_dotenv
 
-DATABASE_URL="postgresql://postgres:[SUA_SENHA]@localhost:5433/connectcare360"
+load_dotenv()
+
+DATABASE_URL = (
+    f"postgresql://postgres:{os.getenv('POSTGRES_PASSWORD')}"
+    "@localhost:5433/connectcare360"
+)
 
 
 def get_connection():
